@@ -35,28 +35,28 @@ void useLambda() {
 	printVector(d);
 	cout << "\n";
 }
-/*
-Container<double> createContainer(const int i) {
-	Container<double> v{ i };
+
+Container createContainer(const int i) {
+	Container v{ i };
 	v.set(1, 99.0);
 	v.print();
 	return v;
-}*/
+}
 void useContainer() {
-	//Container<double> v = createContainer(5);
-	Container<double> v{ 1 };
-	v.set(1, 99.0);
+	Container v = createContainer(5);
+	//Container v{ 1 };
+	//v.set(1, 99.0);
 	v.print();
-	Container<double> v2{ v };
-	v2.print();
-	cout << "v3 -- \n";
-	Container<double> v3{ 5 };
-	v3 = v;
-	v3.push_back(555);
-	v3.print();
+	//Container v2{ v };
+	//v2.print();
+	//cout << "v3 -- \n";
+	//Container v3{ 5 };
+	//v3 = v;
+	//v3.push_back(555);
+	//v3.print();
 }
 void useAccessOperatorContainer() {
-	Container<double> v(10);
+	Container v(10);
 	double x = v[2]; // fine
 	//v[3] = x; // error: v[3] is not an lvalue
 	cout << "start --\n";
