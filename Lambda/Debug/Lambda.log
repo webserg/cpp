@@ -1,0 +1,19 @@
+﻿Build started 9/13/2015 6:18:38 PM.
+     1>Project "C:\Users\webserg\documents\visual studio 2015\Projects\Lambda\Lambda\Lambda.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>c:\users\webserg\documents\visual studio 2015\projects\lambda\lambda\main.cpp(71): warning C4101: 'lac': unreferenced local variable
+     1>c:\users\webserg\documents\visual studio 2015\projects\lambda\lambda\main.cpp(72): warning C4101: 'lai': unreferenced local variable
+     1>c:\users\webserg\documents\visual studio 2015\projects\lambda\lambda\main.cpp(73): warning C4101: 'lad': unreferenced local variable
+     1>c:\users\webserg\documents\visual studio 2015\projects\lambda\lambda\main.cpp(152): warning C4018: '<': signed/unsigned mismatch
+     1>c:\users\webserg\documents\visual studio 2015\projects\lambda\lambda\main.cpp(159): warning C4018: '<': signed/unsigned mismatch
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\webserg\documents\visual studio 2015\Projects\Lambda\Debug\Lambda.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\webserg\documents\visual studio 2015\Projects\Lambda\Debug\Lambda.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\webserg\documents\visual studio 2015\Projects\Lambda\Debug\Lambda.lib" /MACHINE:X86 Debug\Container.obj
+         Debug\main.obj
+         Lambda.vcxproj -> C:\Users\webserg\documents\visual studio 2015\Projects\Lambda\Debug\Lambda.exe
+     1>Done Building Project "C:\Users\webserg\documents\visual studio 2015\Projects\Lambda\Lambda\Lambda.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.73
