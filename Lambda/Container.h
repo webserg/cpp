@@ -7,11 +7,11 @@ public:
 	void construct(T* p, const T& v); // construct a T with the value v in p
 	void destroy(T* p); // destroy the T in p
 };
-class Container
+template<typename T> class Container
 {
 private:
 	int sz;
-	double* elem;
+	T* elem;
 	int space;// number of elements plus “free space”/“slots”
 // for new elements (“the current allocation”)
 	void copy(const Container& arg);     // copy elements from arg into *elem
@@ -21,19 +21,19 @@ public:
 	~Container();
 	Container(const Container& c);//copy constuctor
 	Container& operator=(const Container&);
-	double& operator[](int n);
-	double operator[](int n) const; // for const vectors
+	T& operator[](int n);
+	T operator[](int n) const; // for const vectors
 	Container(Container&&); // move constructor
 	//Container& operator=(Container&&); // move assignment
 	int size() const {
 		return sz;
 	}
 	void print() const;
-	void set(int pos, double val);
+	void set(int pos, T val);
 	void reserve(int newalloc);
 	int capacity() const;
 	void resize(int newsize);
-	void push_back(const double d);
+	void push_back(const T d);
 };
 struct Link {
 	string value;

@@ -10,23 +10,23 @@ class myexception : public exception
 	}
 } myex;
 
-Container::Container() : sz{ 0 }, elem{ nullptr }, space{ 0 }
+Container<double>::Container() : sz{ 0 }, elem{ nullptr }, space{ 0 }
 {
 	cout << "default constructor \n";
 }
 
-Container::Container(int s) : sz{ s }, space{ s }, elem { new double[s] }
+Container<double>::Container(int s) : sz{ s }, space{ s }, elem { new double[s] }
 {
 	cout << "constructor(int s) \n";
 	for (int i = 0; i < s; ++i) { elem[i] = 0; }
 }
 
-Container::Container(const Container& c) : sz{ c.size() }, space{ c.size() }, elem{ new double[c.size()] } {
+Container<double>::Container(const Container<double>& c) : sz{ c.size() }, space{ c.size() }, elem{ new double[c.size()] } {
 	cout << "copy constructor\n";
 	copy(c);
 }
 
-Container::Container(Container&& a)
+Container<double>::Container(Container<double>&& a)
 	: sz{ a.sz }, elem{ a.elem } // copy a’s elem and sz
 {
 	cout << "move constructor \n";
@@ -34,18 +34,18 @@ Container::Container(Container&& a)
 	a.elem = nullptr;
 }
 
-Container::~Container()
+Container<double>::~Container()
 {
 	cout << "destructor delete[] elem\n";
 	delete[] elem;
 }
 
-void Container::copy(const Container& arg) {
+template< > void Container<double>::copy(const Container<double>& arg) {
 	for (int i = 0; i<arg.sz; ++i) elem[i] = arg.elem[i];
 }
 
 
-Container& Container::operator=(const Container& a)
+Container<double>& Container<double>::operator=(const Container<double>& a)
 {
 	cout << "operator = make this vector a copy of a \n";
 	double* p = new double[a.sz]; // allocate new space
@@ -60,12 +60,12 @@ Container& Container::operator=(const Container& a)
 	return *this; // return a self-reference (see §17.10)
 }
 
-double& Container::operator[](int n)
+double& Container<double>::operator[](int n)
 { 
 	return elem[n]; 
 } // return element
 
-double Container::operator[](int n) const { // for const vectors
+double Container<double>::operator[](int n) const { // for const vectors
 	return elem[n];
 }
 
@@ -80,11 +80,11 @@ double Container::operator[](int n) const { // for const vectors
 	return *this; // return a self-reference (see §17.10)
 }*/
 
-void Container::set(int pos, double val) {
+void Container<double>::set(int pos, double val) {
 	elem[pos] = val;
 }
 
-void Container::print() const {
+void Container<double>::print() const {
 	cout << "Container: ";
 	for (int i = 0; i < sz; i++) {
 		cout << elem[i] << " ";
@@ -93,7 +93,7 @@ void Container::print() const {
 
 }
 
-void Container::reserve(int newalloc)
+void Container<double>::reserve(int newalloc)
 {
 	if (newalloc <= space) return; // never decrease allocation
 	double* p = new double[newalloc]; // allocate new space
@@ -103,9 +103,9 @@ void Container::reserve(int newalloc)
 	space = newalloc;
 }
 
-int Container::capacity() const {	return space; }
+int Container<double>::capacity() const {	return space; }
 
-void Container::resize(int newsize)
+void Container<double>::resize(int newsize)
 // make the vector have newsize elements
 // initialize each new element with the default value 0.0
 {
@@ -117,7 +117,7 @@ void Container::resize(int newsize)
 	sz = newsize;
 }
 
-void Container::push_back(const double d)
+void Container<double>::push_back(const double d)
 // increase vector size by one; initialize the new element with d
 {
 	if (space == 0)

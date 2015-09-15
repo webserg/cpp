@@ -36,14 +36,14 @@ void useLambda() {
 	cout << "\n";
 }
 
-Container createContainer(const int i) {
-	Container v{ i };
+Container<double> createContainer(const int i) {
+	Container<double> v{ i };
 	v.set(1, 99.0);
 	v.print();
 	return v;
 }
 void useContainer() {
-	Container v = createContainer(5);
+	Container<double> v = createContainer(5);
 	//Container v{ 1 };
 	//v.set(1, 99.0);
 	v.print();
@@ -56,7 +56,7 @@ void useContainer() {
 	//v3.print();
 }
 void useAccessOperatorContainer() {
-	Container v(10);
+	Container<double> v(10);
 	double x = v[2]; // fine
 	//v[3] = x; // error: v[3] is not an lvalue
 	cout << "start --\n";
