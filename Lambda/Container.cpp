@@ -69,7 +69,7 @@ double Container<double>::operator[](int n) const { // for const vectors
 	return elem[n];
 }
 
-/*Container& Container::operator=(Container&& a) // move a to this vector
+Container<double>& Container<double>::operator=(Container<double>&& a) // move a to this vector
 {
 	cout << " move(operator) a to this vector \n";
 	delete[] elem; // deallocate old space
@@ -78,7 +78,7 @@ double Container<double>::operator[](int n) const { // for const vectors
 	a.elem = nullptr; // make a the empty vector
 	a.sz = 0;
 	return *this; // return a self-reference (see §17.10)
-}*/
+}
 
 void Container<double>::set(int pos, double val) {
 	elem[pos] = val;
