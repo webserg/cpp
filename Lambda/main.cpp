@@ -42,18 +42,32 @@ Container<double> createContainer(const int i) {
 	v.print();
 	return v;
 }
+
+Container<double>* make_vec() // make a filled vector
+{
+	Container<double>* p = new Container<double>; // we allocate on free store
+	//&p.set(1, 11.0);								  // . . . fill the vector with data; this may throw an exception . . .
+	return p;
+}
+
 void useContainer() {
 	Container<double> v = createContainer(5);
-	//Container v{ 1 };
-	//v.set(1, 99.0);
 	v.print();
-	//Container v2{ v };
-	//v2.print();
-	//cout << "v3 -- \n";
-	//Container v3{ 5 };
-	//v3 = v;
-	//v3.push_back(555);
-	//v3.print();
+	Container<double> v1{ 5 };
+	v1.set(1, 999.0);
+	v1.print();
+	Container<double> v2{ v };
+	v2.print();
+	cout << "v3 -- \n";
+	Container<double> v3{ 5 };
+	v3 = v;
+	v3.push_back(555);
+	v3.print();
+	v1 = std::move(v3);
+	v1.print();
+	cout << "makevec\n";
+	Container<double>* con = make_vec();
+	cout << "finish\n";
 }
 void useAccessOperatorContainer() {
 	Container<double> v(10);
