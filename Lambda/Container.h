@@ -18,13 +18,17 @@ private:
 public:
 	Container();
 	explicit Container(int s);
-	~Container();
+	~Container()
+	{
+		cout << "destructor delete[] elem\n";
+		delete[] elem;
+	}
 	Container(const Container& c);//copy constuctor
 	Container& operator=(const Container&);
-	T& operator[](int n);
-	T operator[](int n) const; // for const vectors
+	T& operator[](int n) { return elem[n]; }
+	const T& operator[](int n) const { return elem[n]; } // for const vectors
 	Container(Container&&); // move constructor
-	//Container& operator=(Container&&); // move assignment
+	Container& operator=(Container&&); // move assignment
 	int size() const {
 		return sz;
 	}
