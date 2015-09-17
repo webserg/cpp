@@ -1,6 +1,8 @@
 #include "Container.h"
 
 using namespace std;
+template class Container <double>;
+
 class myexception : public exception
 {
 	virtual const char* what() const throw()
