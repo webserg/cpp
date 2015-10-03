@@ -1,6 +1,11 @@
 #include "Container.h"
 
 using namespace std;
+//the compiler will create a new class
+//Consequently, the compiler needs to have access to the implementation of the methods, to instantiate them with the template argument (in this case int). 
+//If these implementations were not in the header, they wouldn't be accessible, and therefore the compiler wouldn't be able to instantiate the template.
+//A common solution to this is to write the template declaration in a header file, then implement the class in an implementation file(for example.tpp), 
+//and include this implementation file at the end of the header.
 template class Container <double>;
 
 class myexception : public exception

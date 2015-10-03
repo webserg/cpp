@@ -176,9 +176,109 @@ void f(vector<int> v) {
 	}
 }
 
+void suspicious1(int s, int x)
+{
+	int* p = new int[s]; // acquire memory
+						 // . . .
+	if (x) return;
+	// . . .
+	delete[] p; // release memory but can't be achived so memory leak
+}
+
+void suspicious2(int s, int x) // messy code
+{
+	int* p = new int[s]; // acquire memory
+	vector<int> v;
+	// . . .
+	try {
+		if (x) p[x] = v.at(x);
+		// . . .
+	}
+	catch (exception) { // catch every exception
+		delete[] p; // release memory
+		throw; // re-throw the exception
+	}
+	// . . .
+	delete[] p; // release memory
+}
+
+void f(vector<int>& v, int s)
+{
+	vector<int> p(s);
+	vector<int> q(s);
+	//acquired by a constructor and released by the matching destructor
+}
+
+vector<int>* make_vec1() // make a filled vector
+{
+	vector<int>* p = new vector<int>; // we allocate on free store
+									  // . . . fill the vector with data; this may throw an exception . . .
+	return p;
+}
+
+vector<int>* make_vec2() // make a filled vector
+{
+	vector<int>* p = new vector<int>; // we allocate on free store
+	try {
+		// fill the vector with data; this may throw an exception
+		return p;
+	}
+	catch (exception) {
+		delete p; // do our local cleanup
+		throw; // re-throw to allow our caller to deal with the fact
+			   // that make_vec() couldn’t do what was
+			   // required of it
+	}
+}
+
+std::unique_ptr<vector<int>> make_vec3() // make a filled vector using “smart” pointer
+{
+	unique_ptr<vector<int>> p{ new vector<int> }; // allocate on free store
+												  // . . . fill the vector with data; this may throw an exception . . .
+	return p;
+}
+//The move solution generalizes to all containers and further still to all resource handles.
+vector<int> make_vec4() // make a filled vector
+{
+	vector<int> res;
+	// . . . fill the vector with data; this may throw an exception . . .
+	return res; // the move constructor efficiently transfers ownership
+}
+
+struct Foo
+{
+	int _i;
+	Foo(int i) :_i(i) { std::cout << "Foo::Foo " << _i << "\n"; }
+	~Foo() { std::cout << "Foo::~Foo " << _i << "\n"; }
+	void bar() { std::cout << "Foo::bar\n"; }
+};
+
+unique_ptr<Foo> f(Foo &)
+{
+	std::cout << "f(const Foo&)\n";
+	//foo->bar();
+	unique_ptr<Foo> p1(new Foo(1));
+	return p1;
+}
+
+void useSmartPointer() 
+{
+	
+	std::unique_ptr<Foo> p1(new Foo(0));  // p1 owns Foo
+	if (p1) p1->bar();
+	
+	unique_ptr<Foo> p3 = f(*p1);
+	cout << "finish\n";
+}
+
+void useMaps() {
+
+}
+
 int main() {
+	//useSmartPointer();
 	//useLambda();
-	useContainer();
+	//useContainer();
 	//useList();
 	//useConstructor();
 	//useAccessOperatorContainer();

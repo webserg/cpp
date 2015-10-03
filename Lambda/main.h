@@ -14,6 +14,7 @@
 #include<algorithm>
 #include<stdexcept>
 #include<exception>
+#include<memory>
 
 
 using namespace std;
@@ -25,4 +26,5 @@ inline void keep_window_open()
 	cin >> ch;
 	return;
 }
+
 #endif
