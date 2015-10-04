@@ -15,6 +15,7 @@
 #include<stdexcept>
 #include<exception>
 #include<memory>
+#include<map>
 
 
 using namespace std;
