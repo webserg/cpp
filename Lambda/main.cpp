@@ -264,7 +264,7 @@ unique_ptr<Foo> f(Foo &)
 void useSmartPointer() 
 {
 	
-	std::unique_ptr<Foo> p1(new Foo(0));  // p1 owns Foo
+	unique_ptr<Foo> p1(new Foo(0));  // p1 owns Foo
 	if (p1) p1->bar();
 	
 	unique_ptr<Foo> p3 = f(*p1);
@@ -272,10 +272,27 @@ void useSmartPointer()
 }
 
 void useMaps() {
-
+	map<string, string> dictionary;
+	typedef map<int, string> MyMap;
+	MyMap map;
+	dictionary["sea"] = "large body of water"; // insert or assign to element
+	cout << "map:\n";
+	cout << dictionary["sea"]; // read value
+	cout << "\n";
+	int key = 1;
+	string value = "1";
+	std::pair<MyMap::iterator, bool> res = map.insert(make_pair(key,value));
+	if (!res.second) {
+		cout << "key " << key << " already exists "
+			<< " with value " << (res.first)->second << endl;
+	} else {
+		cout << "created key " << key << " with value " << value << endl;
+	}
+	cout << map[1] << "\n";
 }
 
 int main() {
+	useMaps();
 	//useSmartPointer();
 	//useLambda();
 	//useContainer();
