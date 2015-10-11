@@ -1,5 +1,7 @@
 #include "main.h"
 #include "Container.h"
+#include <set>
+#include <thread>
 
 void func3(vector<int>& v) {
 	for_each(v.begin(), v.end(), [](int& i) { i++; });
@@ -291,8 +293,115 @@ void useMaps() {
 	cout << map[1] << "\n";
 }
 
+class Employee {
+public:
+
+	Employee(const string& fname, const string& sname) : first_name{ fname }, family_name{ sname } {
+	}
+	virtual void print() const;
+	string full_name() const { return first_name + ' ' + family_name; }
+	virtual ~Employee(){}
+	// ...
+private:
+	string first_name, family_name;
+	
+	// ...
+};
+class Manager : public Employee {
+public:
+	using Employee::Employee;
+	//Manager(const string& fname, const string& sname, int lvl) : level{lvl} {
+	//}
+	void print() const override;
+private:
+	int level{0};
+	// ...
+};
+class Message
+{
+	int id;
+public:
+	Message(int _id):id{_id}
+	{
+		
+	}
+	~Message(){}
+	void print()
+	{
+		cout << id << "\n";
+	}
+	bool operator>(const Message& rhs) const;
+	bool operator<(const Message& rhs) const;
+};
+
+bool Message::operator>( const Message& rhs) const {
+	return (id > rhs.id);
+}
+bool Message::operator<(const Message& rhs) const {
+	return (id < rhs.id);
+}
+
+void Employee::print() const
+{
+	cout << "Employee :: name is " << family_name << '\n';
+}
+
+void Manager::print() const
+{
+	cout << "name is " << full_name() << '\n';
+	Employee::print(); // print Employee information
+}
+
+void print_list(const list<Employee*>& s)
+{
+	for (auto x : s)
+		x->print();
+}
+
+typedef map<int, Employee*> EmployeeMap;
+
+Employee* getById(int id, EmployeeMap map) {
+	EmployeeMap::const_iterator it;
+	it = map.find(id);
+	if (it != map.end())
+	{
+		return it->second;
+
+	}
+	else return nullptr;
+}
+
+void useEmployee() {
+	Employee e{ "Sergiy","Doroshenko" };
+	Manager m{ "Ss","Manager" };
+	print_list({ &e,&m });
+	
+	EmployeeMap emap;
+	emap[0] = &e;
+	emap[1] = &m;
+	Employee* empl = getById(1,emap);
+	cout << empl->full_name() << "\n";
+}
+
+void useSet()
+{
+	Message m1{ 1 };
+	Message m2{ 2 };
+	Message m3{ 3 };
+	//set<Message, greater<const Message&>> pqueue_messages;
+	set<Message> pqueue_messages;
+	pqueue_messages.insert(m1);
+	pqueue_messages.insert(m2);
+	pqueue_messages.insert(m3);
+	for (auto i : pqueue_messages)
+		i.print();
+}
+
+
 int main() {
-	useMaps();
+	useSet();
+	//useEmployee();
+	//useMaps();
 	//useSmartPointer();
 	//useLambda();
 	//useContainer();
