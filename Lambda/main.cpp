@@ -2,6 +2,8 @@
 #include "Container.h"
 #include <set>
 #include <thread>
+#define CATCH_CONFIG_RUNNER
+#include "catch.hpp"
 
 void func3(vector<int>& v) {
 	for_each(v.begin(), v.end(), [](int& i) { i++; });
@@ -58,7 +60,7 @@ void useContainer() {
 	Container<double> v1{ 5 };
 	v1.set(1, 999.0);
 	v1.print();
-	
+
 	Container<double> v2{ v };
 	v2.print();
 	cout << "v3 -- \n";
@@ -92,8 +94,8 @@ void useArray() {
 	ad[5] = 99;
 	double* p = &ad[5]; // point to ad[5]
 	cout << "array 5 elem = " << *p << "\n";
-	for (double* p = &ad[0]; p<&ad[10]; ++p) cout << *p << '\n';
-				   // . . .
+	for (double* p = &ad[0]; p < &ad[10]; ++p) cout << *p << '\n';
+	// . . .
 }
 void useList() {
 	Link* norse_gods = new Link{ "Thor" };
@@ -162,10 +164,10 @@ void useConstructor() {
 	//delete[] pp;
 }
 
-vector<int> gv{1,2,4,8,16};
+vector<int> gv{ 1,2,4,8,16 };
 
 void f(vector<int> v) {
-	vector<int> lv{gv};
+	vector<int> lv{ gv };
 	for (int i = 0; i < lv.size(); i++) {
 		cout << lv[i] << "\n";
 	}
@@ -263,12 +265,12 @@ unique_ptr<Foo> f(Foo &)
 	return p1;
 }
 
-void useSmartPointer() 
+void useSmartPointer()
 {
-	
+
 	unique_ptr<Foo> p1(new Foo(0));  // p1 owns Foo
 	if (p1) p1->bar();
-	
+
 	unique_ptr<Foo> p3 = f(*p1);
 	cout << "finish\n";
 }
@@ -283,11 +285,12 @@ void useMaps() {
 	cout << "\n";
 	int key = 1;
 	string value = "1";
-	std::pair<MyMap::iterator, bool> res = map.insert(make_pair(key,value));
+	std::pair<MyMap::iterator, bool> res = map.insert(make_pair(key, value));
 	if (!res.second) {
 		cout << "key " << key << " already exists "
 			<< " with value " << (res.first)->second << endl;
-	} else {
+	}
+	else {
 		cout << "created key " << key << " with value " << value << endl;
 	}
 	cout << map[1] << "\n";
@@ -300,11 +303,11 @@ public:
 	}
 	virtual void print() const;
 	string full_name() const { return first_name + ' ' + family_name; }
-	virtual ~Employee(){}
+	virtual ~Employee() {}
 	// ...
 private:
 	string first_name, family_name;
-	
+
 	// ...
 };
 class Manager : public Employee {
@@ -314,19 +317,19 @@ public:
 	//}
 	void print() const override;
 private:
-	int level{0};
+	int level{ 0 };
 	// ...
 };
 class Message
 {
 	int id;
 public:
-	Message(int _id):id{_id}
+	Message(int _id) :id{ _id }
 	{
-		
+
 	}
-	~Message(){}
-	void print()
+	~Message() {}
+	void print() const
 	{
 		cout << id << "\n";
 	}
@@ -334,7 +337,7 @@ public:
 	bool operator<(const Message& rhs) const;
 };
 
-bool Message::operator>( const Message& rhs) const {
+bool Message::operator>(const Message& rhs) const {
 	return (id > rhs.id);
 }
 bool Message::operator<(const Message& rhs) const {
@@ -375,12 +378,31 @@ void useEmployee() {
 	Employee e{ "Sergiy","Doroshenko" };
 	Manager m{ "Ss","Manager" };
 	print_list({ &e,&m });
-	
+
 	EmployeeMap emap;
 	emap[0] = &e;
 	emap[1] = &m;
-	Employee* empl = getById(1,emap);
+	Employee* empl = getById(1, emap);
 	cout << empl->full_name() << "\n";
+}
+void useManager(Manager* m, Message& message)
+{
+	m->print();
+	message.print();
+	Message m2{ 2 };
+	message = m2;
+	message.print();
+	Manager mm{ "Ss","Manager" };
+	m = &mm;
+	m->print();
+}
+
+void useRef()
+{
+	Manager m{ "Ss","Manager" };
+	Message m1{ 1 };
+	useManager(&m, m1);
+
 }
 
 void useSet()
@@ -398,8 +420,127 @@ void useSet()
 }
 
 
-int main() {
-	useSet();
+struct BankAccount
+{
+	int balance = 1;
+	BankAccount()
+	{
+
+	}
+	explicit BankAccount(int balance)
+		: balance(balance)
+	{
+	}
+};
+
+
+TEST_CASE("Factorials are computed", "[factorial]") {
+	BankAccount account;
+	REQUIRE(account.balance == 1);
+}
+
+class Empty {
+public:
+	Empty(string _id) :id(_id) {  } // default constructor		
+	Empty(const Empty& rhs) :id(rhs.id) {} // copy constructor
+	/*In many cases, this is sufficient. However, there are certain
+circumstances where the member-wise copy version is not good enough.
+By far, the most common reason the default copy constructor is not
+sufficient is because the object contains raw pointers and you need
+to take a "deep" copy of the pointer.*/
+	~Empty() {  } // destructor — see below
+					 // for whether it's virtual
+	Empty& operator=(const Empty& rhs) {
+		id = rhs.id;
+		return *this;
+	} // copy assignment operator
+	string print() { return id; }
+private:
+	string id;
+};
+
+TEST_CASE("empty", "use") {
+
+	Empty e1("1"); // default constructor;
+			  // destructor
+	Empty e2(e1); // copy constructor
+	e2 = e1; // copy assignment operator
+	REQUIRE(e2.print() == "1");
+
+}
+
+int useFilesWrite() {
+	char first_name[30], last_name[30]; int age;
+	char file_name[20];
+	// Collect the data.
+	cout << "Enter First Name: "; cin >> first_name;
+	cout << "Enter Last Name: "; cin >> last_name;
+	cout << "Enter Age: "; cin >> age;
+	cout << endl << "Enter the name of the file: "; cin >> file_name;
+
+	// Create an ofstream called People, open the stream for output.
+	ofstream People(file_name, ios::out);
+	// Write the output to the stream.
+	People << first_name << endl << last_name << endl << age << endl;
+	return 0;
+}
+#include <iostream>
+#include <fstream>
+#include <string>
+int useFilesRead() {
+	string line;
+	ifstream People("ttt.txt");
+	if (People.is_open())
+	{
+		while (getline(People, line))
+		{
+			cout << line << '\n';
+		}
+		People.close();
+	}
+	return 0;
+}
+// Improperly declared function:  parameter should be const reference:
+void print_me_bad(std::string& s) {
+	std::cout << s << std::endl;
+}
+
+// Properly declared function: function has no intent to modify s:
+void print_me_good(const std::string& s) {
+	std::cout << s << std::endl;
+}
+
+void constCorrectness()
+{
+	std::string hello("Hello");
+	/*
+	When passing parameters by reference to functions or constructors, be very
+	careful about const correctness. Pass by non-const reference ONLY if
+	the function will modify the parameter and it is the intent to change
+	the caller's copy of the data, otherwise pass by const reference.
+
+	Why is this so important? There is a small clause in the C++ standard
+	that says that non-const references cannot bind to temporary objects.
+	A temporary object is an instance of an object that does not have a
+	variable name
+	*/
+	print_me_bad(hello);  // Compiles ok; hello is not a temporary
+	print_me_bad(std::string("World"));  // Compile error; temporary object
+	//print_me_bad("!"); // Compile error; compiler wants to construct temporary
+					   // std::string from const char*
+
+	print_me_good(hello); // Compiles ok
+	print_me_good(std::string("World")); // Compiles ok
+	print_me_good("!"); // Compiles ok 
+}
+
+int main(int argc, char* argv[]) {
+
+	//useRef();
+	//useSet();
+	//using namespace chrono;
+	//milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+	//cout << ms.count() << "\n";
 	//useEmployee();
 	//useMaps();
 	//useSmartPointer();
@@ -416,6 +557,15 @@ int main() {
 	//	else vv[i] = i * vv[i - 1];
 	//}
 	//cout << "vvvv";
-	//f(vv);
+	//f(vv);	
+	//argc = 1;
+	//argv[0] = "-r xml";
+	//int result = Catch::Session().run(argc, argv);
+	//useFilesWrite();
+	//useFilesRead();
+	constCorrectness();
+	
+	
 	keep_window_open();
+	return 0;
 }

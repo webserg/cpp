@@ -1,7 +1,5 @@
-#ifndef __DATE_H_INCLUDED__   // if x.h hasn't been included yet...
-#define __DATE_H_INCLUDED__   //   #define this so the compiler knows it has been included
-#define _SCL_SECURE_NO_WARNINGS
 #pragma once
+
 
 #include<iostream>
 #include<fstream>
@@ -28,4 +26,3 @@ inline void keep_window_open()
 	return;
 }
 
-#endif
