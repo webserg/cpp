@@ -7,10 +7,11 @@
 1 3
 2 4
 3 4
+std::ios::sync_with_stdio(false);
 */
 
 using namespace std;
-auto test = false;
+auto test = true;
 void least_lexicographic_topological_sort(const int N, const int M)
 {
 	vector<vector<int>> adjList(N + 1);
@@ -74,13 +75,51 @@ void least_lexicographic_topological_sort(const int N, const int M)
 		cout << "Sandro fails.";
 	}
 	else {
-		for (int i = 0; i < N; i++)
+		for (auto v : order)
 		{
-			printf("%d ",order[i]);
+			printf("%d ", v);
 		}
 	}
 }
 
+class Graph
+{
+	int N, M;
+	vector<vector<int>> adjList;
+	vector<int> indegree;
+
+public:
+	Graph(int n, int m);
+	void Graph::addEdge(int x, int y);
+	void print();
+
+};
+
+Graph::Graph(int n, int m) :N(n), M(m), adjList(n + 1), indegree(N + 1, 0) {}
+
+void Graph::addEdge(int x, int y)
+{
+	adjList[x].push_back(y);
+	indegree[y]++;
+}
+
+void Graph::print()
+{
+	for (auto i = 0; i < adjList.size(); i++)
+	{
+		cout << i << " -->";
+		for (auto j = 0; j < adjList[i].size(); j++)
+		{
+			cout << adjList[i][j] << ",";
+		}
+		cout << endl;
+	}
+	for (auto k: indegree)
+	{
+		cout << k << endl;
+	}
+	cout << endl;
+}
 
 inline void keep_window_open()
 {
@@ -93,14 +132,24 @@ inline void keep_window_open()
 
 int main()
 {
-	int n = 0, m = 0;
+	ios::sync_with_stdio(false);
+	int n, m;
 	scanf_s("%d", &n);
 	scanf_s("%d", &m);
 	if (test) {
 		cout << "n=" << n << " m=" << m;
 	}
-	least_lexicographic_topological_sort(n, m);
+	//least_lexicographic_topological_sort(n, m);
+	int x, y;
 	if (test) {
+		Graph graph(n, m);
+		for (auto i = 0; i < m; i++)
+		{
+			scanf_s("%d", &x);
+			scanf_s("%d", &y);
+			graph.addEdge(x, y);
+		}
+		graph.print();
 		keep_window_open();
 	}
 	return 0;
