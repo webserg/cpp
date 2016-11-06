@@ -8,6 +8,7 @@
 2 4
 3 4
 */
+
 using namespace std;
 auto test = false;
 void least_lexicographic_topological_sort(const int N, const int M)
