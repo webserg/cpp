@@ -5,8 +5,30 @@
 #include <unordered_map>
 #include <set>
 #include <map>
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 using namespace std;
+
+class thread_guard
+{
+	std::thread& t;
+public:
+	explicit thread_guard(std::thread& t_) :
+		t(t_)
+	{}
+	~thread_guard()
+	{
+		if (t.joinable())
+		{
+			t.join();
+		}
+	}
+	thread_guard(thread_guard const&) = delete;
+	thread_guard& operator=(thread_guard const&) = delete;
+};
+
 class hash_set
 {
 	vector<vector<long long>> elems;
@@ -35,7 +57,7 @@ public:
 
 int hash_set::getIdx(long long d) const
 {
-	int h = hash<double>()(d);
+	int h = hash<long long>()(d);
 	return h % elems.size();
 }
 
@@ -47,6 +69,56 @@ void hash_set::insert(long long d)
 
 int hash_set::contains(long long d)
 {
+	for (auto e : elems[getIdx(d)])
+	{
+		if (e == d) return 1;
+	}
+	return 0;
+}
+
+class concurrent_hash_set
+{
+	vector<vector<int>> elems;
+	int N;
+	float load_factor = 0.75;
+	int size;
+	int getIdx(int);
+	mutex mutex_guard;
+public:
+	vector<int> iter;
+	explicit concurrent_hash_set(int n) :N(n)
+	{
+		size = N * load_factor;
+		elems.reserve(size);
+		iter.reserve(N);
+		vector<int> empty;
+		for (int i = 0; i < size; ++i)
+		{
+			elems.push_back(empty);
+		}
+	};
+
+	void insert(int);
+	int contains(int);
+
+};
+
+int concurrent_hash_set::getIdx(int d) 
+{
+	int h = hash<int>()(d);
+	return h % elems.size();
+}
+
+void concurrent_hash_set::insert(int d)
+{
+	lock_guard<mutex> guard(mutex_guard);
+	iter.push_back(d);
+	elems[getIdx(d)].push_back(d);
+}
+
+int concurrent_hash_set::contains(int d)
+{
+	lock_guard<mutex> guard(mutex_guard);
 	for (auto e : elems[getIdx(d)])
 	{
 		if (e == d) return 1;
@@ -75,26 +147,124 @@ void readNumbers(hash_set &mset)
 
 }
 
+void do_work(hash_set& mset, int& res, hash_set& tset, int t)
+{
+	for (auto y : mset.iter)
+	{
+		auto x = t - y;
+		auto xMinusYPlus = y > 0 && x < 0;
+		auto yMinusXPlus = y < 0 && x > 0;
+
+		if (xMinusYPlus || yMinusXPlus) {
+			if (mset.contains(x) && x != y && !tset.contains(t)) {
+				tset.insert(t);
+				res++;
+				//printf("%.1lf + %.1lf = %d, count= %d\n", y, x, t, res);
+			}
+		}
+	}
+}
+
+
+class Res
+{
+	std::atomic<int> x;
+
+public:
+	Res() {
+		x = 0;
+	}
+	void Add() {
+		++x;
+	}
+	void Sub() {
+		--x;
+	}
+	int get() {
+		return x;
+	}
+};
+
+void do_work_concurent(hash_set& mset, Res& res, concurrent_hash_set& tset, int t)
+{
+	for (auto y : mset.iter)
+	{
+		auto x = t - y;
+		auto xMinusYPlus = y > 0 && x < 0;
+		auto yMinusXPlus = y < 0 && x > 0;
+
+		if (xMinusYPlus || yMinusXPlus) {
+			if (mset.contains(x) && x != y && !tset.contains(t)) {				
+				res.Add();
+				//printf("%lld + %lld = %d, count= %d\n", y, x, t, res.get());
+				tset.insert(t);
+			}
+		}
+	}
+}
+
+struct WorkingFunctionInThread
+{
+	Res &res;
+	hash_set& mset;
+	concurrent_hash_set& tset;
+	int startRange;
+	int endRange;
+	WorkingFunctionInThread(Res& res, hash_set& mset, concurrent_hash_set& tset, int startRange, int endRange) :res(res), mset(mset), tset(tset), startRange(startRange), endRange(endRange) {}
+	void operator()()
+	{
+		cout << "tread started \n";
+		for (auto t = startRange; t < endRange; t++)
+		{
+			do_work_concurent(mset, res, tset, t);
+		}
+		cout << "tread finished \n";
+	}
+};
+
+
+void countTwoSum_concurrent(hash_set &mset, int startRange, int endRange, Res& res)
+{
+	auto i = 0;
+	concurrent_hash_set tset(500);
+	WorkingFunctionInThread my_func(res, mset, tset, startRange, startRange / 2);
+	thread my_thread(my_func);
+	thread_guard g(my_thread);
+
+	WorkingFunctionInThread my_func2(res, mset, tset, startRange / 2, 0);
+	thread my_thread2(my_func2);
+	thread_guard g1(my_thread2);
+
+	WorkingFunctionInThread my_func3(res, mset, tset, 0, endRange / 2);
+	thread my_thread3(my_func3);
+	thread_guard g2(my_thread3);
+
+	WorkingFunctionInThread my_func4(res, mset, tset, endRange / 2, endRange + 1);
+	thread my_thread4(my_func4);
+	thread_guard g3(my_thread4);
+
+}
+
 void countTwoSum(hash_set &mset, int startRange, int endRange)
 {
 	auto i = 0;
 	auto res = 0;
 	hash_set tset(1000);
-	for (auto y : mset.iter)
+	for (auto t = startRange; t < startRange / 2; t++)
 	{
-		for (auto t = startRange; t <= endRange; t++) {
-			auto x = t - y;
-			auto xMinusYPlus = y > 0 && x < 0;
-			auto yMinusXPlus = y < 0 && x > 0;
-
-			if (xMinusYPlus || yMinusXPlus) {
-				if (mset.contains(x) && x != y && !tset.contains(t)) {
-					tset.insert(t);
-					res++;
-					//printf("%.1lf + %.1lf = %d, count= %d\n", y, x, t, res);
-				}
-			}
-		}
+		do_work(mset, res, tset, t);
+	}
+	for (auto t = startRange / 2; t < 0; t++)
+	{
+		do_work(mset, res, tset, t);
+	}
+	for (auto t = 0; t < endRange / 2; t++)
+	{
+		do_work(mset, res, tset, t);
+	}
+	for (auto t = endRange / 2; t <= endRange; t++)
+	{
+		do_work(mset, res, tset, t);
 	}
 	cout << "res=" << res << "\n";
 }
@@ -105,7 +275,12 @@ void twoSumProblem()
 	auto N = 1000000;
 	hash_set mSet(N);
 	readNumbers(mSet);
+	cout << "number loaded "<< "\n";
 	//countTwoSum(mSet, -10000, 10000);
+	Res res;
+	countTwoSum_concurrent(mSet, -10000, 10000,res);
+
+	cout << "res=" << res.get() << "\n";
 	cout << "\n" << "end";//427
 }
 
@@ -158,9 +333,9 @@ void testMySet()
 	cout << std::hash<int>()(1) << endl;
 	hash_set myset(10);
 
-	myset.insert(1.0);
-	myset.insert(1.0);
-	myset.insert(1.0);
+	myset.insert(1);
+	myset.insert(1);
+	myset.insert(1);
 	myset.insert(2);
 	myset.insert(3);
 	myset.insert(5);
@@ -244,6 +419,57 @@ void testmap()
 
 }
 
+void hello(Res& a)
+{
+	a.Add();
+	//std::cout << "Hello Concurrent World from " << " i= " << "\n";
+}
+
+struct WorkingFunc
+{
+	Res &i;
+	WorkingFunc(Res& i_) :i(i_) {}
+	void operator()()
+	{
+		for (unsigned j = 0; j < 10000; ++j)
+		{
+			hello(i);
+		}
+	}
+};
+
+void oops(Res &a)
+{
+
+	WorkingFunc my_func(a);
+	thread my_thread(my_func);
+	thread_guard g(my_thread);
+	//std::thread my_thread1(my_func);
+	thread my_thread2(my_func);
+	thread_guard g2(my_thread2);
+	thread my_thread3(my_func);
+	thread_guard g3(my_thread3);
+	thread my_thread4(my_func);
+	thread_guard g4(my_thread4);
+
+}
+int testThread()
+{
+	atomic<int> j = 0;
+	Res a;
+	oops(a);
+	std::cout << "res" << " i= " << a.get() << "\n";
+
+	std::cout << "res" << " i= " << a.get() << "\n";
+
+	//my_thread1.join();
+	std::cout << "res" << " i= " << a.get() << "\n";
+
+
+	std::cout << "res" << " i= " << a.get() << "\n";
+	return 0;
+}
+
 int main() {
 	ios::sync_with_stdio(false);
 	twoSumProblem();
@@ -251,6 +477,7 @@ int main() {
 	//testMultiSet();
 	//testmap();
 	//testMySet();
+	//testThread();
 	cin.get();
 	return 0;
 }
