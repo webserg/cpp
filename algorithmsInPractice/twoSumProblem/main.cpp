@@ -472,12 +472,12 @@ int testThread()
 
 int main() {
 	ios::sync_with_stdio(false);
-	twoSumProblem();
+	//twoSumProblem();
 	//testSet();
 	//testMultiSet();
 	//testmap();
 	//testMySet();
-	//testThread();
+	testThread();
 	cin.get();
 	return 0;
 }
