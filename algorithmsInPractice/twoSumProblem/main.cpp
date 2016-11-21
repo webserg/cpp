@@ -8,123 +8,10 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
+#include "hash_set.h"
+#include "concurrent_hash_set.h"
 
 using namespace std;
-
-class thread_guard
-{
-	std::thread& t;
-public:
-	explicit thread_guard(std::thread& t_) :
-		t(t_)
-	{}
-	~thread_guard()
-	{
-		if (t.joinable())
-		{
-			t.join();
-		}
-	}
-	thread_guard(thread_guard const&) = delete;
-	thread_guard& operator=(thread_guard const&) = delete;
-};
-
-class hash_set
-{
-	vector<vector<long long>> elems;
-	int N;
-	float load_factor = 0.75;
-	int size;
-	int getIdx(long long) const;
-public:
-	vector<long long> iter;
-	explicit hash_set(int n) :N(n)
-	{
-		size = N * load_factor;
-		elems.reserve(size);
-		iter.reserve(N);
-		vector<long long> empty;
-		for (int i = 0; i < size; ++i)
-		{
-			elems.push_back(empty);
-		}
-	};
-
-	void insert(long long);
-	int contains(long long);
-
-};
-
-int hash_set::getIdx(long long d) const
-{
-	int h = hash<long long>()(d);
-	return h % elems.size();
-}
-
-void hash_set::insert(long long d)
-{
-	iter.push_back(d);
-	elems[getIdx(d)].push_back(d);
-}
-
-int hash_set::contains(long long d)
-{
-	for (auto e : elems[getIdx(d)])
-	{
-		if (e == d) return 1;
-	}
-	return 0;
-}
-
-class concurrent_hash_set
-{
-	vector<vector<int>> elems;
-	int N;
-	float load_factor = 0.75;
-	int size;
-	int getIdx(int);
-	mutex mutex_guard;
-public:
-	vector<int> iter;
-	explicit concurrent_hash_set(int n) :N(n)
-	{
-		size = N * load_factor;
-		elems.reserve(size);
-		iter.reserve(N);
-		vector<int> empty;
-		for (int i = 0; i < size; ++i)
-		{
-			elems.push_back(empty);
-		}
-	};
-
-	void insert(int);
-	int contains(int);
-
-};
-
-int concurrent_hash_set::getIdx(int d) 
-{
-	int h = hash<int>()(d);
-	return h % elems.size();
-}
-
-void concurrent_hash_set::insert(int d)
-{
-	lock_guard<mutex> guard(mutex_guard);
-	iter.push_back(d);
-	elems[getIdx(d)].push_back(d);
-}
-
-int concurrent_hash_set::contains(int d)
-{
-	lock_guard<mutex> guard(mutex_guard);
-	for (auto e : elems[getIdx(d)])
-	{
-		if (e == d) return 1;
-	}
-	return 0;
-}
 
 void readNumbers(hash_set &mset)
 {
@@ -168,7 +55,7 @@ void do_work(hash_set& mset, int& res, hash_set& tset, int t)
 
 class Res
 {
-	std::atomic<int> x;
+	atomic<int> x;
 
 public:
 	Res() {
@@ -194,7 +81,7 @@ void do_work_concurent(hash_set& mset, Res& res, concurrent_hash_set& tset, int 
 		auto yMinusXPlus = y < 0 && x > 0;
 
 		if (xMinusYPlus || yMinusXPlus) {
-			if (mset.contains(x) && x != y && !tset.contains(t)) {				
+			if (mset.contains(x) && x != y && !tset.contains(t)) {
 				res.Add();
 				//printf("%lld + %lld = %d, count= %d\n", y, x, t, res.get());
 				tset.insert(t);
@@ -210,7 +97,8 @@ struct WorkingFunctionInThread
 	concurrent_hash_set& tset;
 	int startRange;
 	int endRange;
-	WorkingFunctionInThread(Res& res, hash_set& mset, concurrent_hash_set& tset, int startRange, int endRange) :res(res), mset(mset), tset(tset), startRange(startRange), endRange(endRange) {}
+	WorkingFunctionInThread(Res& res, hash_set& mset, concurrent_hash_set& tset, int startRange, int endRange) :
+		res{ res }, mset{ mset }, tset{ tset }, startRange{ startRange }, endRange{ endRange } {}
 	void operator()()
 	{
 		cout << "tread started \n";
@@ -275,10 +163,10 @@ void twoSumProblem()
 	auto N = 1000000;
 	hash_set mSet(N);
 	readNumbers(mSet);
-	cout << "number loaded "<< "\n";
+	cout << "number loaded " << "\n";
 	//countTwoSum(mSet, -10000, 10000);
 	Res res;
-	countTwoSum_concurrent(mSet, -10000, 10000,res);
+	countTwoSum_concurrent(mSet, -10000, 10000, res);
 
 	cout << "res=" << res.get() << "\n";
 	cout << "\n" << "end";//427
