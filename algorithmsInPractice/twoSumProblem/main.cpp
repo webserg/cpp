@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void readNumbers(hash_set &mset)
+void readGraph(hash_set &mset)
 {
 	auto s = "C:\\git\\algorithmsDesignAndAnalysis\\resource\\2sum.txt";
 	//auto s = "C:\\git\\algorithmsDesignAndAnalysis\\resource\\hashIntTest1.txt";
@@ -162,7 +162,7 @@ void twoSumProblem()
 {
 	auto N = 1000000;
 	hash_set mSet(N);
-	readNumbers(mSet);
+	readGraph(mSet);
 	cout << "number loaded " << "\n";
 	//countTwoSum(mSet, -10000, 10000);
 	Res res;

@@ -240,3 +240,9 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/algorithmsInPractice/dfs/largeG.txt
+/graph1.gv
+/graph1.png
+/graph1.ps
+/algorithmsInPractice/dfs/printG.gv
+/algorithmsInPractice/dfs/printG.png

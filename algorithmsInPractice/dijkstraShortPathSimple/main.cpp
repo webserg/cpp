@@ -10,6 +10,20 @@ void error(string s)
 {
 	throw runtime_error(s);
 }
+class Vertex
+{
+	int name;
+	int key;
+public:
+	explicit Vertex(int n, int s);
+	int getName()const;
+	int getKey()const;
+	void setKey(int k)
+	{
+		key = k;
+	}
+	friend std::ostream& operator<< (std::ostream &out, const Vertex &v);
+};
 vector<int> keys;
 class MinHeap
 {
