@@ -24,6 +24,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "topoSortKnuth", "topoSortKn
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lambda", "Lambda\Lambda.vcxproj", "{27E1CC98-CD99-442D-AB3D-20CC58535D3A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "topoSortCormen", "topoSortCormen\topoSortCormen.vcxproj", "{0025F86D-DE76-4837-A0BA-8ED1217DEEE7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7857339E-DA44-4390-9277-FCEAA8F3583C} = {7857339E-DA44-4390-9277-FCEAA8F3583C}
+		{14FA4ED0-55D6-4D88-A03A-C749FC7DE320} = {14FA4ED0-55D6-4D88-A03A-C749FC7DE320}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -104,6 +110,14 @@ Global
 		{27E1CC98-CD99-442D-AB3D-20CC58535D3A}.Release|x64.Build.0 = Release|x64
 		{27E1CC98-CD99-442D-AB3D-20CC58535D3A}.Release|x86.ActiveCfg = Release|Win32
 		{27E1CC98-CD99-442D-AB3D-20CC58535D3A}.Release|x86.Build.0 = Release|Win32
+		{0025F86D-DE76-4837-A0BA-8ED1217DEEE7}.Debug|x64.ActiveCfg = Debug|x64
+		{0025F86D-DE76-4837-A0BA-8ED1217DEEE7}.Debug|x64.Build.0 = Debug|x64
+		{0025F86D-DE76-4837-A0BA-8ED1217DEEE7}.Debug|x86.ActiveCfg = Debug|Win32
+		{0025F86D-DE76-4837-A0BA-8ED1217DEEE7}.Debug|x86.Build.0 = Debug|Win32
+		{0025F86D-DE76-4837-A0BA-8ED1217DEEE7}.Release|x64.ActiveCfg = Release|x64
+		{0025F86D-DE76-4837-A0BA-8ED1217DEEE7}.Release|x64.Build.0 = Release|x64
+		{0025F86D-DE76-4837-A0BA-8ED1217DEEE7}.Release|x86.ActiveCfg = Release|Win32
+		{0025F86D-DE76-4837-A0BA-8ED1217DEEE7}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

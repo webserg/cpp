@@ -16,6 +16,7 @@ void Graph::dfs_visit(const int u)
 	colors[u] = BLACK;
 	time++;
 	finish[u] = time;
+	topoList.push_front(u);
 }
 
 
@@ -51,3 +52,4 @@ void Graph::printColors()
 		cout << i << " predcessor = " << predcessors[i] << "; distance from 0 = " << distance[i] << "\n";
 	}
 }
+

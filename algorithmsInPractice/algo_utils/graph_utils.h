@@ -24,8 +24,10 @@ inline void readGraph(vector<vector<int>> &vertexs, string filePath)
 	}
 	while (inFile >> u)
 	{
-		inFile >> w;
-		vertexs[u].push_back(w);
+		if (inFile >> w)
+		{
+			vertexs[u].push_back(w);
+		}
 	}
 	inFile.close();
 }

@@ -1,30 +1,24 @@
-#define BOOST_TEST_MODULE Dfs Test suites
+#define BOOST_TEST_MODULE Topo sort Test suites
 #include <boost/test/included/unit_test.hpp>
-#include "Graph.h"
+#include "../dfs/Graph.h"
+#include "../dfs/Graph.cpp"
+namespace utf = boost::unit_test;
+const bool main_run = false;
 
-BOOST_AUTO_TEST_CASE(tineG_graph_test)
-{
-	ios::sync_with_stdio(false);
-	vector<vector<int>> vertexes;
-	string dir = "C:\\git\\algorithmsDesignAndAnalysis\\resource\\";
-	readGraph(vertexes, dir + "tinyG.txt");
-	Graph G{ vertexes };
-	G.dfs();
-	BOOST_CHECK(G.is_Tree(),"it is tree");
-}
 
-BOOST_AUTO_TEST_CASE(tineG_tree_test)
+BOOST_AUTO_TEST_CASE(topoSort_test)
 {
 	ios::sync_with_stdio(false);
 	vector<vector<int>> vertexes;
 	string dir = "C:\\Users\\webse\\Source\\Repos\\cpp\\algorithmsInPractice\\dfs\\";
-	readGraph(vertexes, dir + "tinyG.txt");
+	readGraph(vertexes, dir + "topoSortCormen1.txt");
 	Graph G{ vertexes };
 	G.dfs();
-	BOOST_CHECK(!G.is_Tree(), "it is graph, but not tree");
+	cout << "finish" << nl;
+	G.printTopoList();
 }
 
-BOOST_AUTO_TEST_CASE(main_test)
+BOOST_AUTO_TEST_CASE(main_test, * utf::enable_if<main_run>())
 {
 	ios::sync_with_stdio(false);
 	vector<vector<int>> vertexes;
@@ -38,14 +32,20 @@ BOOST_AUTO_TEST_CASE(main_test)
 
 	Graph G{ vertexes };
 	G.dfs();
-	if(G.is_Tree())
+	if (G.is_Tree())
 	{
 		cout << "it is tree" << nl;
-	}else
+	}
+	else
 	{
 		cout << "it is graph, but not tree" << nl;
 	}
 	G.printColors();
 
+	
+}
+
+BOOST_AUTO_TEST_CASE(show_res_test)
+{
 	cin.get();
 }
