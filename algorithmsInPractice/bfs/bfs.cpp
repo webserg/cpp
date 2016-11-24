@@ -4,34 +4,15 @@
 #include <string>
 #include <list>
 #include "graph_utils.h"
+#include "../algo_utils/queue.h"
 #define WHITE 0
 #define BLACK 1
 #define GRAY 2
-using namespace std;
-class queue_int
-{
-	list<int> elems;
-public:
-	void push(int e)
-	{
-		elems.push_back(e);
-	}
-	int pop()
-	{
-		auto t = elems.front();
-		elems.pop_front();
-		return t;
-	}
-	bool empty() const
-	{
-		return elems.empty();
-	}
-};
 
 
 void bfs(vector<vector<int>> &vertexes, vector<int> &colors, vector<int> &predcessors, vector<int> &distance)
 {
-	queue_int Q;
+	queue<int> Q;
 	Q.push(0);
 	colors[0] = GRAY;
 	while (!Q.empty())

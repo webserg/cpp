@@ -1,6 +1,6 @@
 #include "concurrent_hash_set.h"
 
-int concurrent_hash_set::getIdx(int d)
+int concurrent_hash_set::getIdx(int d) const
 {
 	int h = hash<int>()(d);
 	return h % elems.size();

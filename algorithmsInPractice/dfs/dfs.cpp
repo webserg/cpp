@@ -10,7 +10,11 @@ class Graph
 	vector<int> colors;
 	vector<int> predcessors;
 	vector<int> distance;
+	vector<int> finish;
+	int time = 0;
+	bool isTree = true;
 	void dfs_visit(const int v);
+	bool checkIfTree() const;
 public:
 	explicit Graph(const vector<vector<int>>& vertexes)
 		: adjListOfV(vertexes)
@@ -19,54 +23,56 @@ public:
 		predcessors.resize(vertexes.size());
 		for (auto &s : predcessors) { s = -1; }
 		distance.resize(vertexes.size());
+		finish.resize(vertexes.size());
 	}
 	void dfs();
-	void printPath(int s, int v);
+	bool is_Tree() const
+	{
+		return isTree;
+	};
 	void printColors();
 };
 
 
 void Graph::dfs_visit(const int u)
 {
+	time++;
+	distance[u] = time;
 	colors[u] = GRAY;
-	for (auto v: adjListOfV[u])
+	for (auto v : adjListOfV[u])
 	{
-		if(colors[v] == WHITE)
+		if (colors[v] == WHITE)
 		{
 			predcessors[v] = u;
 			dfs_visit(v);
 		}
 	}
 	colors[u] = BLACK;
+	time++;
+	finish[u] = time;
 }
 
 
+bool Graph::checkIfTree() const
+{
+	return time < adjListOfV.size() * 2;
+}
+
 void Graph::dfs()
 {
-	for (auto u = 0; u < adjListOfV.size(); u++)
-	{
+	for (auto u = 0; u < adjListOfV.size() && checkIfTree(); u++)
+	{		
 		if (colors[u] == WHITE)
 		{
 			dfs_visit(u);
 		}
+		if(u > 0)
+		{
+			isTree = false;
+		}
 	}
 }
 
-void Graph::printPath(int s, int v)
-{
-	if (s == v)
-	{
-		cout << s;
-	}
-	else if (predcessors[v] == -1) {
-		cout << " no path from " << s << " to " << v << " \n";
-	}
-	else
-	{
-		printPath(s, predcessors[v]);
-		cout << "->" << v;
-	}
-}
 void Graph::printColors()
 {
 	for (auto i = 0; i < colors.size(); i++)
@@ -79,10 +85,12 @@ void Graph::printColors()
 		cout << i << " predcessor = " << predcessors[i] << "; distance from 0 = " << distance[i] << "\n";
 	}
 }
-int main() {
+int main() 
+{
 	ios::sync_with_stdio(false);
 	vector<vector<int>> vertexes;
 	string dir = "C:\\Users\\webse\\Source\\Repos\\cpp\\algorithmsInPractice\\dfs\\";
+	//string dir = "C:\\git\\algorithmsDesignAndAnalysis\\resource\\";
 	readGraph(vertexes, dir + "tinyG.txt");
 	printGraphToFile(vertexes, dir + "printG.gv");
 	auto convertToPNG = "dot -Tpng " + dir + "printG.gv -o " + dir + "printG.png";
@@ -90,9 +98,15 @@ int main() {
 	auto show = dir + "printG.png";
 	//system(show.c_str());
 
-	Graph G{vertexes};
+	Graph G{ vertexes };
 	G.dfs();
-	G.printPath(0, 11);
+	if(G.is_Tree())
+	{
+		cout << "it is tree" << nl;
+	}else
+	{
+		cout << "it is graph, but not tree" << nl;
+	}
 	G.printColors();
 
 	cin.get();

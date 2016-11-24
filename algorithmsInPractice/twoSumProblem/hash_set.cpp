@@ -1,18 +1,19 @@
 #include "hash_set.h"
 using namespace std;
-int hash_set::getIdx(long long d) const
+template class hash_set <long long>;
+template<typename T> int hash_set<T> ::getIdx(T d) const
 {
 	int h = hash<long long>()(d);
 	return h % elems.size();
 }
 
-void hash_set::insert(long long d)
+template<typename T> void hash_set<T>::insert(T d)
 {
 	iter.push_back(d);
 	elems[getIdx(d)].push_back(d);
 }
 
-int hash_set::contains(long long d)
+template<typename T> int hash_set<T>::contains(T d)
 {
 	for (auto e : elems[getIdx(d)])
 	{

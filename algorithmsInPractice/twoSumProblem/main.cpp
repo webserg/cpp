@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void readGraph(hash_set &mset)
+void readGraph(hash_set<long long> &mset)
 {
 	auto s = "C:\\git\\algorithmsDesignAndAnalysis\\resource\\2sum.txt";
 	//auto s = "C:\\git\\algorithmsDesignAndAnalysis\\resource\\hashIntTest1.txt";
@@ -34,7 +34,7 @@ void readGraph(hash_set &mset)
 
 }
 
-void do_work(hash_set& mset, int& res, hash_set& tset, int t)
+void do_work(hash_set<long long>& mset, int& res, hash_set<long long>& tset, int t)
 {
 	for (auto y : mset.iter)
 	{
@@ -72,7 +72,7 @@ public:
 	}
 };
 
-void do_work_concurent(hash_set& mset, Res& res, concurrent_hash_set& tset, int t)
+void do_work_concurent(hash_set<long long>& mset, Res& res, concurrent_hash_set& tset, int t)
 {
 	for (auto y : mset.iter)
 	{
@@ -93,11 +93,11 @@ void do_work_concurent(hash_set& mset, Res& res, concurrent_hash_set& tset, int 
 struct WorkingFunctionInThread
 {
 	Res &res;
-	hash_set& mset;
+	hash_set<long long>& mset;
 	concurrent_hash_set& tset;
 	int startRange;
 	int endRange;
-	WorkingFunctionInThread(Res& res, hash_set& mset, concurrent_hash_set& tset, int startRange, int endRange) :
+	WorkingFunctionInThread(Res& res, hash_set<long long>& mset, concurrent_hash_set& tset, int startRange, int endRange) :
 		res{ res }, mset{ mset }, tset{ tset }, startRange{ startRange }, endRange{ endRange } {}
 	void operator()()
 	{
@@ -111,7 +111,7 @@ struct WorkingFunctionInThread
 };
 
 
-void countTwoSum_concurrent(hash_set &mset, int startRange, int endRange, Res& res)
+void countTwoSum_concurrent(hash_set<long long> &mset, int startRange, int endRange, Res& res)
 {
 	auto i = 0;
 	concurrent_hash_set tset(500);
@@ -133,11 +133,11 @@ void countTwoSum_concurrent(hash_set &mset, int startRange, int endRange, Res& r
 
 }
 
-void countTwoSum(hash_set &mset, int startRange, int endRange)
+void countTwoSum(hash_set<long long> &mset, int startRange, int endRange)
 {
 	auto i = 0;
 	auto res = 0;
-	hash_set tset(1000);
+	hash_set<long long> tset(1000);
 	for (auto t = startRange; t < startRange / 2; t++)
 	{
 		do_work(mset, res, tset, t);
@@ -161,7 +161,7 @@ void countTwoSum(hash_set &mset, int startRange, int endRange)
 void twoSumProblem()
 {
 	auto N = 1000000;
-	hash_set mSet(N);
+	hash_set<long long> mSet(N);
 	readGraph(mSet);
 	cout << "number loaded " << "\n";
 	//countTwoSum(mSet, -10000, 10000);
@@ -219,7 +219,7 @@ void testSet()
 void testMySet()
 {
 	cout << std::hash<int>()(1) << endl;
-	hash_set myset(10);
+	hash_set<long long> myset(10);
 
 	myset.insert(1);
 	myset.insert(1);
@@ -364,8 +364,8 @@ int main() {
 	//testSet();
 	//testMultiSet();
 	//testmap();
-	//testMySet();
-	testThread();
+	testMySet();
+	//testThread();
 	cin.get();
 	return 0;
 }

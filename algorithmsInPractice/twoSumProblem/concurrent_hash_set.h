@@ -9,7 +9,7 @@ class concurrent_hash_set
 	int N;
 	float load_factor = 0.75;
 	int size;
-	int getIdx(int);
+	int getIdx(int) const;
 	mutex mutex_guard;
 public:
 	vector<int> iter;
