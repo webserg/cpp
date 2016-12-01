@@ -15,17 +15,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="scc_main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="graph_scc.cpp">
+    <ClCompile Include="merge.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="graph_scc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="mergeSort.h">
       <Filter>Header Files</Filter>
     </ClInclude>

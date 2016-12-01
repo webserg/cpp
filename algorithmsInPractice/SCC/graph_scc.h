@@ -7,6 +7,24 @@
 #define BLACK 1
 #define GRAY 2
 using namespace std;
+//class V
+//{
+//public:
+//	int i;
+//	V()
+//	{
+//		i = 0;
+//	}
+//	explicit V(int name)
+//		: i(name)
+//	{
+//	}
+//
+//	operator int()
+//	{
+//		return i;
+//	}
+//};
 class graph_scc
 {
 	vector<vector<int>> adjListOfV;
@@ -15,36 +33,45 @@ class graph_scc
 	vector<int> predcessors;
 	vector<int> distance;
 	vector<int> finish;
+	vector<int> leaders_scc;
 
 	int time = 0;
-	bool isTree = true;
+	int k;
+
+	void merge(vector<int>::iterator iter, int first, int mid, int last);
+
+	void split(vector<int>::iterator iter, int first, int last);
+
+	void mergeSort(vector<int>::iterator start, vector<int>::iterator end);
+
 	void dfs_visit(const int v);
-	bool checkIfTree() const;
+	void dfs_visit_scc(const int u);
 public:
-	explicit graph_scc(const vector<vector<int>>& vertexes)
-		: adjListOfV(vertexes)
+	explicit graph_scc(const vector<vector<int>>& verteces)
+		
 	{
-		adjListOfV_T.resize(vertexes.size());
-		for (auto u = 0; u < vertexes.size(); u++)
+		adjListOfV.resize(verteces.size());
+		adjListOfV_T.resize(verteces.size());
+
+		for (auto u = 0; u < verteces.size(); u++)
 		{
-			for (auto v : vertexes[u])
+			for (auto v : verteces[u])
 			{
+				adjListOfV[u].push_back(v);
 				adjListOfV_T[v].push_back(u);
 			}
 		}
-		colors.resize(vertexes.size());
-		predcessors.resize(vertexes.size());
+		colors.resize(verteces.size());
+		predcessors.resize(verteces.size());
 		for (auto &s : predcessors) { s = -1; }
-		distance.resize(vertexes.size());
-		finish.resize(vertexes.size());
+		distance.resize(verteces.size());
+		finish.resize(verteces.size());
 
 	}
 	void dfs();
-	bool is_Tree() const
-	{
-		return isTree;
-	};
+	void dfs_scc();
 	void printColors();
+	void printLeaders();
 	const vector<vector<int>>& get_transpose_graph() const
 	{
 		return adjListOfV_T;
