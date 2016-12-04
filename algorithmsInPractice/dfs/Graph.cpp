@@ -5,7 +5,7 @@ void Graph::dfs_visit(const int u)
 	time++;
 	distance[u] = time;
 	colors[u] = GRAY;
-	for (auto v : adjListOfV[u])
+	for (auto& v : adjListOfV[u])
 	{
 		if (colors[v] == WHITE)
 		{

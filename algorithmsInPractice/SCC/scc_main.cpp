@@ -29,24 +29,46 @@ inline void printGraphToFileT(vector<vector<int>> vertexes, string s)
 	inFile << "}" << nl;
 }
 
-int main() {
-	ios::sync_with_stdio(false);
+void test1()
+{
 	vector<vector<int>> vertexes;
 	string dir = "C:\\Users\\webse\\Source\\Repos\\cpp\\algorithmsInPractice\\SCC\\";
-	readGraph(vertexes, dir + "SCCTest1.txt");
-//	printGraphToFile(vertexes, dir + "printG.gv");
-//	run_show_graph_command(dir);
-
-	graph_scc G{ vertexes };
-//	printGraphToFile(vertexes, dir + "printG.gv");
+	readGraph(dir + "SCCTest1.txt");
+	graph_scc G{ readGraph(dir + "SCCTest1.txt") };
+	//	printGraphToFile(vertexes, dir + "printG.gv");
 	printGraphToFileT(G.get_transpose_graph(), dir + "printG.gv");
 	run_show_graph_command(dir);
 
 	G.dfs();
 	G.dfs_scc();
 	//G.printColors();
-	cout << "leaders" << "\n";
+	std::cout << "leaders" << "\n";
 	G.printLeaders();
+
+}
+
+void test2(string dir, string file, vector<int> answer, bool drawGraph)
+{
+	
+	graph_scc G{ readGraph(dir + file) };
+	if (drawGraph) {
+		printGraphToFileT(G.get_transpose_graph(), dir + "printG.gv");
+		run_show_graph_command(dir);
+	}
+	G.dfs();
+	G.dfs_scc();
+	std::cout << "leaders" << "\n";
+	G.printLeaders();
+	G.comparesizeSCC(answer);
+}
+
+int main() {
+	ios::sync_with_stdio(false);
+	//	test1();
+
+	test2("C:\\Users\\webse\\Source\\Repos\\cpp\\algorithmsInPractice\\SCC\\", "SCCTest2.txt", { 4,3,3,1 }, false);
+	test2("C:\\Users\\webse\\Source\\Repos\\cpp\\algorithmsInPractice\\SCC\\", "SCCTest3.txt", { 3,3,2 }, false);
+	test2("C:\\Users\\webse\\Source\\Repos\\cpp\\algorithmsInPractice\\SCC\\", "SCCTest4.txt", { 6,3,2,1 }, false);
 	cin.get();
 	return 0;
 }

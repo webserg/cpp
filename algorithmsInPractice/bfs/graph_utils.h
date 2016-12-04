@@ -35,7 +35,7 @@ inline void readGraph(std::vector<std::vector<int>> &vertexs, string filePath)
 inline void printGraph(vector<vector<int>> vertexes)
 {
 	int v = 0;
-	for (auto adjList : vertexes)
+	for (auto& adjList : vertexes)
 	{
 		cout << v++ << " --> ";
 		for (auto w : adjList)

@@ -2,9 +2,7 @@
 #include "Container.h"
 #include <set>
 #include <thread>
-#define BOOST_TEST_MODULE My Test 1
-#include <boost/test/included/unit_test.hpp>
-#define CATCH_CONFIG_RUNNER
+#include <cassert>
 
 void func3(vector<int>& v) {
 	for_each(v.begin(), v.end(), [](int& i) { i++; });
@@ -125,17 +123,17 @@ struct X { // simple test class
 	{
 		cerr << this << " -> " << s << " : " << val << " (" << nv << ")\n";
 	}
-	X() { out("X()", 0); val = 0; } // default constructor
+	X() { out("default constructor X()", 0); val = 0; } // default constructor
 
-	X(int v) { val = v; out("X(int)", v); }
+	X(int v) { val = v; out("constructor X(int)", v); }
 
-	X(const X& x) { val = x.val; out("X(X&) ", x.val); } // copy constructor
+	X(const X& x) { val = x.val; out("copy constructor X(X&) ", x.val); } // copy constructor
 
 	X& operator=(const X& a) // copy assignment
 	{
-		out("X::operator=()", a.val); val = a.val; return *this;
+		out("copy assignment X::operator=()", a.val); val = a.val; return *this;
 	}
-	~X() { out("~X()", 0); } // destructor
+	~X() { out("destructor ~X()", 0); } // destructor
 };
 
 X glob(2); // a global variable
@@ -434,18 +432,6 @@ struct BankAccount
 	}
 };
 
-BOOST_AUTO_TEST_CASE(first_test) 
-{
-	int i = 1;
-	BOOST_TEST(i); 
-	BOOST_TEST(i == 2); 
-}
-
-BOOST_AUTO_TEST_CASE(second_test)
-{
-	BankAccount account;
-	BOOST_TEST(account.balance == 1);
-}
 
 class Empty {
 public:
@@ -467,14 +453,14 @@ private:
 	string id;
 };
 
-BOOST_AUTO_TEST_CASE(third_test)
+void third_test()
 {
 
 	Empty e1("1"); // default constructor;
 				   // destructor
 	Empty e2(e1); // copy constructor
 	e2 = e1; // copy assignment operator
-	BOOST_TEST(e2.print() == "1");
+	assert(e2.print() == "1");
 
 }
 
@@ -544,34 +530,32 @@ void constCorrectness()
 }
 
 int add(int i, int j) { return i + j; }
-BOOST_AUTO_TEST_CASE(example_test)
+
+
+vector<X> fillVector()
 {
-	// seven ways to detect and report the same error:
-	BOOST_CHECK(add(2, 2) == 4);        // #1 continues on error
-
-	BOOST_REQUIRE(add(2, 2) == 4);      // #2 throws on error
-
-	if (add(2, 2) != 4)
-		BOOST_ERROR("Ouch...");            // #3 continues on error
-
-	if (add(2, 2) != 4)
-		BOOST_FAIL("Ouch...");             // #4 throws on error
-
-	if (add(2, 2) != 4) throw "Ouch..."; // #5 throws on error
-
-	BOOST_CHECK_MESSAGE(add(2, 2) == 4,  // #6 continues on error
-		"add(..) result: " << add(2, 2));
-
-	BOOST_CHECK_EQUAL(add(2, 2), 4);	  // #7 continues on error
-	int i = 1;
-	BOOST_TEST(i);
-	BOOST_TEST(i == 1);
+	auto v = vector<X>(5);
+	return v;
 }
 
-BOOST_AUTO_TEST_CASE(main_test)
+void printVector(const vector<X> v)
+{
+	for(auto& x:v)
+	{
+		//x;
+	}
+}
+
+void userVector()
+{
+	printVector(fillVector());
+	//auto v =  fillVector();
+}
+
+int main() 
 {
 
-	useRef();
+	//useRef();
 	//useSet();
 	//using namespace chrono;
 	//milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
@@ -598,8 +582,8 @@ BOOST_AUTO_TEST_CASE(main_test)
 	//int result = Catch::Session().run(argc, argv);
 	//useFilesWrite();
 	//useFilesRead();
-	constCorrectness();
-
+	//constCorrectness();
+	userVector();
 
 	keep_window_open();
 

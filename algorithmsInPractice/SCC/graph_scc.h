@@ -33,10 +33,10 @@ class graph_scc
 	vector<int> predcessors;
 	vector<int> distance;
 	vector<int> finish;
-	vector<int> leaders_scc;
+	vector<int> size_scc_components;
 
 	int time = 0;
-	int k;
+	int k = 0;
 
 	void merge(vector<int>::iterator iter, int first, int mid, int last);
 
@@ -47,7 +47,7 @@ class graph_scc
 	void dfs_visit(const int v);
 	void dfs_visit_scc(const int u);
 public:
-	explicit graph_scc(const vector<vector<int>>& verteces)
+	explicit graph_scc(const vector<vector<int>> verteces)
 		
 	{
 		adjListOfV.resize(verteces.size());
@@ -55,7 +55,7 @@ public:
 
 		for (auto u = 0; u < verteces.size(); u++)
 		{
-			for (auto v : verteces[u])
+			for (auto& v : verteces[u])
 			{
 				adjListOfV[u].push_back(v);
 				adjListOfV_T[v].push_back(u);
@@ -72,6 +72,8 @@ public:
 	void dfs_scc();
 	void printColors();
 	void printLeaders();
+	void comparesizeSCC(vector<int> vec) const;
+
 	const vector<vector<int>>& get_transpose_graph() const
 	{
 		return adjListOfV_T;

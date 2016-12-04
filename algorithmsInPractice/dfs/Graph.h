@@ -19,7 +19,7 @@ class Graph
 	void dfs_visit(const int v);
 	bool checkIfTree() const;
 public:
-	explicit Graph(const vector<vector<int>>& vertexes)
+	explicit Graph(const vector<vector<int>> vertexes)
 		: adjListOfV(vertexes)
 	{
 		colors.resize(vertexes.size());

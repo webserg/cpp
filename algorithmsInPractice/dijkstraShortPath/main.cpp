@@ -375,5 +375,5 @@ int main()
 	//testPairs();
 	testCase1();
 	testCase2();
-
+	cin.get();
 }

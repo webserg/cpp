@@ -1,13 +1,14 @@
 #include "graph_scc.h"
 #include <algorithm>
 #include "../mergeSort/mergeSort.h"
+#include <cassert>
 
 void graph_scc::merge(vector<int>::iterator iter, int first, int mid, int last)
 {
 	vector<int> temp(last - first + 1);
-	int l = first;
-	int r = mid;
-	int i = 0;
+	auto l = first;
+	auto r = mid;
+	auto i = 0;
 	for (; l < mid && r <= last; i++) {
 		if (finish[iter[l]] > finish[iter[r]]) {
 			temp[i] = iter[l++];
@@ -103,7 +104,7 @@ void graph_scc::dfs_scc()
 		{
 			k = 1;
 			dfs_visit_scc(u);
-			leaders_scc.push_back(k);
+			size_scc_components.push_back(k);
 			k = 0;
 
 		}
@@ -121,9 +122,15 @@ void graph_scc::printColors()
 
 void graph_scc::printLeaders()
 {
-	for (auto v : leaders_scc)
+	std::sort(size_scc_components.begin(), size_scc_components.end(), [](int a, int b) {return (a > b); });
+	for (auto v : size_scc_components)
 	{
 		cout << v << " ";
 	}
 	cout << nl;
+}
+
+void graph_scc::comparesizeSCC(vector<int> vec) const
+{
+	assert((vec == size_scc_components),vec);
 }

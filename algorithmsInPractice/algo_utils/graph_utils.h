@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 #define nl "\n";
-inline void readGraph(vector<vector<int>> &vertexs, string filePath)
+inline vector<vector<int>> readGraph(string filePath)
 {
 	auto s = filePath;
 	ifstream inFile(s);
@@ -16,29 +16,25 @@ inline void readGraph(vector<vector<int>> &vertexs, string filePath)
 	auto E = 0;
 	inFile >> E;
 	auto u = 0, w = 0;
-	vertexs.reserve(V);
-	for (auto i = 0; i < V; i++)
-	{
-		vector<int> adjList;
-		vertexs.push_back(adjList);
-	}
+	auto verteces = vector<vector<int>>(V, vector<int>(V));
 	while (inFile >> u)
 	{
 		if (inFile >> w)
 		{
-			vertexs[u].push_back(w);
+			verteces[u].push_back(w);
 		}
 	}
 	inFile.close();
+	return verteces;
 }
 
 inline void printGraph(vector<vector<int>> vertexes)
 {
 	auto v = 0;
-	for (auto adjList : vertexes)
+	for (auto& adjList : vertexes)
 	{
 		cout << v++;
-		for (auto w : adjList)
+		for (auto& w : adjList)
 		{
 			cout << " -> " << w;
 		}
@@ -51,10 +47,10 @@ inline void printGraphToFile(vector<vector<int>> vertexes, string s)
 	ofstream inFile(s);
 	auto v = 0;
 	inFile << "digraph G { " << nl;
-	for (auto adjList : vertexes)
+	for (auto& adjList : vertexes)
 	{
 		//inFile << v << nl;
-		for (auto w : adjList)
+		for (auto& w : adjList)
 		{
 			inFile << v << " -> " << w << nl;
 		}
