@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "linked_list.h"
 using namespace std;
 #define nl "\n";
 inline vector<vector<int>> readGraph(string filePath)

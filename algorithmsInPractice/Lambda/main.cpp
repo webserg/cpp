@@ -542,7 +542,7 @@ void printVector(const vector<X> v)
 {
 	for(auto& x:v)
 	{
-		//x;
+		cout << "x = " << x.val << "\n";
 	}
 }
 
