@@ -1,10 +1,8 @@
 #pragma once
 template<typename T>
-class node
+struct node
 {
 	T value;
-
-public:
 	node* next;
 	explicit node(const T& value)
 		: value(value)
@@ -19,21 +17,31 @@ class linked_list
 	node<int>* tail;
 
 public:
-	explicit linked_list(node<int>* head)
-		: head(head)
+
+	explicit linked_list()
 	{
-		tail = head;
-	}
-	explicit linked_list(int i)
-	{
-		auto curr = node<int>(i);
-		head = &curr;
-		head->next = tail;
+		head = nullptr;
+		tail = nullptr;
 	}
 	void add(int i)
 	{
-		auto cur = node<int>(i);
-		tail = &cur;
-		tail = &cur;
+		if(head == nullptr)
+		{
+			head = new node<int>(i);
+			tail = head;
+
+		}else
+		{
+			tail->next = new node<int>(i);
+			tail = tail->next;
+		}
 	}
+
+	void print() const
+	{
+		for (auto iter = head; iter != nullptr; iter = iter->next)
+		{
+			std::cout << iter->value;
+		}
+	};
 };
