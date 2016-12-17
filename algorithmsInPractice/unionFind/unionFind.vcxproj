@@ -110,7 +110,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="unionFindFastSearch.cpp" />
+    <ClCompile Include="unionFind.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="unionFindTest1.txt" />
